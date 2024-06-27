@@ -1,5 +1,7 @@
 import 'package:bloc/bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sweat_smart/data/model/LoginUserModel.dart';
+import 'package:sweat_smart/data/repository/FirestoreRepository.dart';
 import 'package:sweat_smart/other/general_utils.dart';
 import 'package:sweat_smart/ui/register/bloc/register_event.dart';
 import 'package:sweat_smart/ui/register/bloc/register_state.dart';
@@ -7,16 +9,17 @@ import 'package:sweat_smart/ui/register/repository/registration_repository.dart'
 
 import '../../../other/resource.dart';
 
-class RegisterBloc extends Bloc<RegisterEvent,RegisterState>{
+class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
 
   Resource<LoginUserModel>? registrationResponse;
   RegistrationRepository? registrationRepository;
 
-  RegisterBloc(this.registrationRepository):super(RegisterState()){
+  RegisterBloc(this.registrationRepository) :super(RegisterState()) {
     on<RegisterButtonClickEvent>(_register);
   }
 
-  void _register(RegisterButtonClickEvent event, Emitter<RegisterState> emitter) async {
+  void _register(RegisterButtonClickEvent event,
+      Emitter<RegisterState> emitter) async {
     _validationCheck(event);
     if (registrationResponse?.status == Status.SUCCESS) {
       registrationResponse = Resource.loading();
@@ -27,51 +30,68 @@ class RegisterBloc extends Bloc<RegisterEvent,RegisterState>{
           phone: event.phone.toString(),
           password: event.password.toString(),
           confirmPassword: event.confirmPassword.toString());
+      if (registrationResponse?.status == Status.SUCCESS) {
+        registrationResponse = await FirebaseRepository().addUser(
+            loginUserModel: registrationResponse?.data);
+
+      }
       emitter(state.copyWith(registrationResponse: registrationResponse));
+
     } else {
       emitter(state.copyWith(registrationResponse: registrationResponse));
     }
   }
 
-  void _validationCheck(RegisterButtonClickEvent event){
-    if(event.userName.toString().isEmpty) {
-      registrationResponse = Resource.failure(message: "Please enter user name");
+  void _validationCheck(RegisterButtonClickEvent event) {
+    if (event.userName
+        .toString()
+        .isEmpty) {
+      registrationResponse =
+          Resource.failure(message: "Please enter user name");
     }
-    else if(event.email.toString().isEmpty) {
+    else if (event.email
+        .toString()
+        .isEmpty) {
       registrationResponse = Resource.failure(message: "Please enter email");
     }
-    else if(!event.email.toString().isValidEmail()) {
-      registrationResponse = Resource.failure(message: "Please enter valid email");
-
-    }else if(event.phone.toString().isEmpty) {
+    else if (!event.email.toString().isValidEmail()) {
+      registrationResponse =
+          Resource.failure(message: "Please enter valid email");
+    } else if (event.phone
+        .toString()
+        .isEmpty) {
       registrationResponse = Resource.failure(message: "Please enter phone");
-
     }
-    else if(event.phone.toString().length!=10) {
-      registrationResponse = Resource.failure(message: "Please enter valid phone number");
-
+    else if (event.phone
+        .toString()
+        .length != 10) {
+      registrationResponse =
+          Resource.failure(message: "Please enter valid phone number");
     }
-    else if(event.password.toString().isEmpty) {
+    else if (event.password
+        .toString()
+        .isEmpty) {
       registrationResponse = Resource.failure(message: "Please enter password");
-
     }
-    else if(event.password.toString().length<=6) {
-      registrationResponse = Resource.failure(message: "Password length should be greater than 6");
-
+    else if (event.password
+        .toString()
+        .length <= 6) {
+      registrationResponse =
+          Resource.failure(message: "Password length should be greater than 6");
     }
-    else if(event.confirmPassword.toString().isEmpty) {
-      registrationResponse = Resource.failure(message: "Please enter confirm password");
-
+    else if (event.confirmPassword
+        .toString()
+        .isEmpty) {
+      registrationResponse =
+          Resource.failure(message: "Please enter confirm password");
     }
-    else if(event.password!=event.confirmPassword) {
-      registrationResponse = Resource.failure(message: "Password didn't matched");
-
-    }else {
+    else if (event.password != event.confirmPassword) {
+      registrationResponse =
+          Resource.failure(message: "Password didn't matched");
+    } else {
       registrationResponse = Resource.success();
-
     }
-
-    }
+  }
 
 
 }

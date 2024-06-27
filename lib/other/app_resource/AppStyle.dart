@@ -6,10 +6,14 @@ import 'AppColors.dart';
 
 class AppStyles{
   TextStyle profileHeadingStyle(Color color){
-    return TextStyle(fontSize: 30,color: color,fontWeight: FontWeight.bold);
+    return TextStyle(fontSize: 25,color: color,fontWeight: FontWeight.bold);
   }
   TextStyle largeHeadingStyle(Color color){
-    return TextStyle(fontSize: 48,color: color,fontWeight: FontWeight.bold);
+    return TextStyle(fontSize: 40,color: color,fontWeight: FontWeight.bold);
+  }
+
+  TextStyle largeSubHeadingStyle(Color color){
+    return TextStyle(fontSize: 16,color: color,fontWeight: FontWeight.bold);
   }
 
   TextStyle regularFontStyle(Color color){

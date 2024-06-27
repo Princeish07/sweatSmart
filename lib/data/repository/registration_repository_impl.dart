@@ -19,6 +19,7 @@ class RegistrationRepositoryImpl extends RegistrationRepository {
       );
 
       LoginUserModel loginUserModel = LoginUserModel(
+        id: credential.user?.uid,
           email: credential.user?.email,
           userName: userName,
           phoneNumber: phone);
@@ -39,4 +40,6 @@ class RegistrationRepositoryImpl extends RegistrationRepository {
       return Resource.failure(message: e.toString());
     }
   }
+
+
 }

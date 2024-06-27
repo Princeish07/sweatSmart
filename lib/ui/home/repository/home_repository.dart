@@ -3,5 +3,7 @@ import '../../../other/resource.dart';
 
 abstract class HomeRepository{
   Future<Resource<String?>> getUserDetailFromSharedPref();
-  Future<List<FootSteps>> getHealthDetails();
+  Future<Resource<List<FootSteps>>> getHealthDetails();
+
+  Future<Resource<bool>> logoutUser();
 }

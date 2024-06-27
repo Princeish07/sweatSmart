@@ -16,6 +16,26 @@ class LoginUserModel extends Equatable {
   final String? id;
   final String? gender;
 
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'email': email,
+      'userName': userName,
+      'phoneNumber': phoneNumber,
+      'gender': gender,
+
+    };
+  }
+
+  LoginUserModel.fromMap(Map<String, dynamic> addressMap)
+      : id = addressMap["id"],
+        email = addressMap["email"],
+        phoneNumber = addressMap["phoneNumber"],
+
+        gender = addressMap["gender"],
+
+      userName = addressMap["userName"];
+
 
   LoginUserModel copyWith(
       {String? email, String? userName, String? phoneNumber, String? id,String? gender }) {

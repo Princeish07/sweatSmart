@@ -22,30 +22,52 @@ class HomeRepositoryImpl extends HomeRepository{
 
 
   final health = Health();
-  Future<List<FootSteps>> getHealthDetails() async {
-    bool requested = await health.requestAuthorization([HealthDataType.STEPS,HealthDataType.TOTAL_CALORIES_BURNED,HealthDataType.BLOOD_GLUCOSE,HealthDataType.HEART_RATE,HealthDataType.BODY_TEMPERATURE]);
-    if (requested) {
-      DateTime now = DateTime.now();
+  Future<Resource<List<FootSteps>>> getHealthDetails() async {
+    try {
+      bool requested = await health.requestAuthorization([HealthDataType.STEPS,HealthDataType.TOTAL_CALORIES_BURNED,HealthDataType.BLOOD_OXYGEN,HealthDataType.HEART_RATE,HealthDataType.BODY_TEMPERATURE]);
+      if (requested) {
+            DateTime now = DateTime.now();
 
-      // Get the start of today (midnight)
-      DateTime startOfToday = DateTime(now.year, now.month, now.day);
+            // Get the start of today (midnight)
+            DateTime startOfToday = DateTime(now.year, now.month, now.day);
 
-      // Get the end of today (just before midnight of the next day)
-      DateTime endOfToday = DateTime(now.year, now.month, now.day, 23, 59, 59);      List<HealthDataPoint> healthData = await health.getHealthDataFromTypes(
-          startTime:startOfToday,
-         endTime:  endOfToday, types: [HealthDataType.STEPS,HealthDataType.TOTAL_CALORIES_BURNED,HealthDataType.BLOOD_GLUCOSE,HealthDataType.HEART_RATE,HealthDataType.BODY_TEMPERATURE],includeManualEntry: true);
-      print("Health Date Set"+healthData.toSet().toString());
-      return healthData.map((e) {
-        var b = e;
-        return FootSteps(
-          value:b.value.toJson()["numeric_value"].toString(),
-         unit: b.unitString,
-         dateFrom:  b.dateFrom,
-         dateTo:  b.dateTo,
-        );
-      }).toList();
+            // Get the end of today (just before midnight of the next day)
+            DateTime endOfToday = DateTime(now.year, now.month, now.day, 23, 59, 59);      List<HealthDataPoint> healthData = await health.getHealthDataFromTypes(
+                startTime:startOfToday,
+               endTime:  endOfToday, types: [HealthDataType.STEPS,HealthDataType.TOTAL_CALORIES_BURNED,HealthDataType.BLOOD_OXYGEN,HealthDataType.HEART_RATE,HealthDataType.BODY_TEMPERATURE],includeManualEntry: true);
+            print("Health Date Set"+healthData.toSet().toString());
+             dynamic list = healthData.map((e) {
+              var b = e;
+              return FootSteps(
+                value:b.value.toJson()["numeric_value"].toString(),
+               unit: b.unitString,
+               dateFrom:  b.dateFrom,
+               dateTo:  b.dateTo,
+              );
+            }).toList();
+
+            return Resource.success(data: list);
+          }
+      return Resource.success(data: []);
+    } catch (e) {
+      return Resource.failure(message: e.toString());
     }
-    return [];
+  }
+
+
+  Future<Resource<bool>> logoutUser() async {
+    try {
+     bool? isSuccess =  await PreferenceUtils.clearPref();
+     if(isSuccess==true) {
+       return Resource.success(data: isSuccess);
+     }else{
+       return Resource.failure(message: "Failed to clear shared pref");
+
+     }
+    } catch (e) {
+      return Resource.failure(message: "Failed to clear shared pref + ${e.toString()}");
+
+    }
   }
 
 

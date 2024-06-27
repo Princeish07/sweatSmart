@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sweat_smart/data/model/LoginUserModel.dart';
 import 'package:sweat_smart/other/resource.dart';
-import 'package:sweat_smart/ui/login/repository/login_repository.dart';
+import 'package:sweat_smart/ui/login/repository/auth_repository.dart';
 
-class LoginRepositoryImpl extends LoginRepository{
+class LoginRepositoryImpl extends AuthRepository{
   @override
   Future<Resource<LoginUserModel>> loginWithEmail(String email, String password) async {
 

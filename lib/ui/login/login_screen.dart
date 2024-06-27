@@ -1,3 +1,5 @@
+
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health/health.dart';
@@ -8,8 +10,10 @@ import 'package:sweat_smart/ui/login/bloc/login_event.dart';
 import 'package:sweat_smart/ui/login/bloc/login_state.dart';
 import 'package:sweat_smart/ui/register/registration_screen.dart';
 
+import '../../main.dart';
 import '../../other/general_utils.dart';
 import '../../other/resource.dart';
+import '../../other/schedule_alarm.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key});
@@ -43,12 +47,11 @@ class _LoginScreenState extends State<LoginScreen> {
         child: BlocBuilder<LoginBloc, LoginState>(
         builder: (context, state) {
           if (state.loginUserModel?.status.name == Status.LOADING.name) {
-            return  Container(
-                child: Center(
-                    child: CircularProgressIndicator(
-              backgroundColor: Colors.cyan,
-              color: Colors.red,
-            )));
+            return  const Center(
+                child: CircularProgressIndicator(
+                          backgroundColor: Colors.cyan,
+                          color: Colors.red,
+                        ));
           }
           else {
             return Container(
@@ -79,10 +82,27 @@ class _LoginScreenState extends State<LoginScreen> {
                   InkWell(onTap:() async {
                     await Permission.activityRecognition.request();
                     await Permission.location.request();
+                    // final alarmSettings = AlarmSettings(
+                    //   id: 43,
+                    //   dateTime: DateTime.fromMillisecondsSinceEpoch(1719214500000),
+                    //   assetAudioPath: 'assets/images/song.mp3',
+                    //   loopAudio: true,
+                    //   vibrate: false,
+                    //   fadeDuration: 3.0,
+                    //   notificationTitle: 'This is the title',
+                    //   notificationBody: 'This is the body',stopOnNotificationOpen: true
+                    // );
+                    // await Alarm.set(alarmSettings: alarmSettings);
 
-
-
-                    // Navigator.push(context, MaterialPageRoute(builder: (context)=>RegistrationScreen()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>RegistrationScreen()));
+                    // schedular.scheduleAlarm(DateTime.fromMillisecondsSinceEpoch(1719225660000), "Schedule", "ds", [Day.monday,Day.tuesday]);
+                    // AndroidAlarmManager.periodic(
+                    //   const Duration(minutes: 30), 0,
+                    //   (){
+                    //     print("Helllo");
+                    //   },
+                    //   startAt: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 8, 0),
+                    // );
                   },child: Text("Sign up"))
                 ],
               ),
@@ -93,4 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
 ),
     );
   }
+
+
+
 }

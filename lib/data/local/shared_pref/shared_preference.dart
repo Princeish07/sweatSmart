@@ -15,6 +15,11 @@ class PreferenceUtils {
     return _prefsInstance?.getString(key) ?? defValue ?? "";
   }
 
+  static Future<bool?> clearPref() async {
+   var prefs = await _prefsInstance?.clear();
+   return prefs;
+  }
+
   static Future<bool> setString(String key, String value) async {
     var prefs = await _instance;
     return prefs.setString(key, value) ?? Future.value(false);
