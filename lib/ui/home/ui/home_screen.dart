@@ -7,9 +7,11 @@ import 'package:sweat_smart/other/app_resource/AppStyle.dart';
 import 'package:sweat_smart/ui/common_loader/bloc/common_loader_bloc.dart';
 import 'package:sweat_smart/ui/common_loader/common_loader_helper.dart';
 import 'package:sweat_smart/ui/create_alarm/ui/create_alarm_screen.dart';
+import 'package:sweat_smart/ui/create_workout_plan/ui/create_workout_plan_screen.dart';
 import 'package:sweat_smart/ui/home/bloc/home_bloc.dart';
 import 'package:sweat_smart/ui/home/bloc/home_event.dart';
 import 'package:sweat_smart/ui/home/ui/CardWithNumericAndString.dart';
+import 'package:sweat_smart/ui/home/ui/alarm_list.dart';
 import 'package:sweat_smart/ui/home/ui/health_detail.dart';
 import 'package:sweat_smart/ui/home/ui/warm_up_excercise_list.dart';
 import 'package:sweat_smart/ui/login/login_screen.dart';
@@ -37,6 +39,8 @@ class _HomeScreenState extends State<HomeScreen> {
         .addPostFrameCallback((_) async {
        context.read<HomeBloc>().add(GetLoggedInUserDetailEvent());
        context.read<HomeBloc>().add(GetUserHealthDetails());
+       context.read<HomeBloc>().add(FetchAlarmListEvent());
+
     });
 
 
@@ -63,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   child: FloatingActionButton(
                       onPressed: () {
-                        // Navigator.push(context, MaterialPageRoute(builder: (context)=>RunningExcerciseScreen()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>CreateWorkOutPlanScreen()));
                       },
                       backgroundColor: Colors.transparent,
                       elevation: 0,
@@ -72,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: Colors.white,
                       )),
                 ),
-                body: BlocListener<HomeBloc, HomeState>(
+                body: BlocListener<HomeBloc, HomeApiState>(
                   listener: (context, state) {
                     if (state.logoutResponse == true) {
                       context.read<HomeBloc>().add(ResetStateEvent());
@@ -84,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           (route) => false);
                     }
                   },
-                  child: BlocBuilder<HomeBloc, HomeState>(
+                  child: BlocBuilder<HomeBloc, HomeApiState>(
                     buildWhen: (old, new1) {
                       return old != new1;
                     },
@@ -184,7 +188,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   return CreateAlarmScreen();
                                                 });
                                           },
-                                        )
+                                        ),
+                                        AlarmList()
                                       ],
                                     ),
                                   ),

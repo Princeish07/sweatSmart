@@ -5,9 +5,11 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:meta/meta.dart';
+import 'package:sweat_smart/data/model/alarm_model.dart';
 import 'package:sweat_smart/other/resource.dart';
 
 import '../../../other/schedule_alarm.dart';
+import '../repository/create_alarm_repository.dart';
 
 part 'create_alarm_event.dart';
 part 'create_alarm_state.dart';
@@ -15,8 +17,9 @@ part 'create_alarm_state.dart';
 class CreateAlarmBloc extends Bloc<CreateAlarmEvent, CreateAlarmState> {
 Resource<String>? response;
 List<bool>? selectedWeekdays = List.filled(7, false);
+AlarmRepository? alarmRepository;
 
-  CreateAlarmBloc() : super(CreateAlarmState()) {
+  CreateAlarmBloc({this.alarmRepository}) : super(CreateAlarmState()) {
     on<SetAlarmEvent>(_setAlarm);
     on<ChangeSlider>(_changeSlider);
     on<SetDateTimeEvent>(_setDateAndTimeEvent);
@@ -33,7 +36,7 @@ List<bool>? selectedWeekdays = List.filled(7, false);
     'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'
   ];
 
-  void _setAlarm(SetAlarmEvent event, Emitter<CreateAlarmState> emitter){
+  Future<void> _setAlarm(SetAlarmEvent event, Emitter<CreateAlarmState> emitter) async {
     // print(state.dateTime);
     // print(state.selectedDay);
     // print(state.sliderValue);
@@ -54,24 +57,35 @@ List<bool>? selectedWeekdays = List.filled(7, false);
     //   weekdays: selectedWeekdays1, message: event.alarmName ?? "NA", target: event.target ?? "NA",
     // );
 
-    final alarmSettings = AlarmSettings(
-      id: state.dateTime.hashCode,
-      dateTime: state.dateTime!,
-      assetAudioPath: 'assets/alarm.mp3',
-      loopAudio: true,
-      vibrate: true,
-      volume: state.sliderValue,
-      fadeDuration: 3.0,
-      notificationTitle: event.target!,
-      notificationBody: event.alarmName!,
-      enableNotificationOnKill: true
+    try {
+      var alarmId = state.dateTime.hashCode;
+      final alarmSettings = AlarmSettings(
+            id: alarmId,
+            dateTime: state.dateTime!,
+            assetAudioPath: 'assets/alarm.mp3',
+            loopAudio: true,
+            vibrate: true,
+            volume: state.sliderValue,
+            fadeDuration: 3.0,
+            notificationTitle: event.target!,
+            notificationBody: event.alarmName!,
+            enableNotificationOnKill: false
 
-    );
-    Alarm.set(alarmSettings: alarmSettings);
-    print("Success");
+          );
+      Alarm.set(alarmSettings: alarmSettings);
 
 
-    emitter(state.copyWith(response: Resource.success()));
+      await alarmRepository?.createAlarm(alarmModel: AlarmModel(time: state.dateTime,alarmName: event.alarmName,target: event.target,volume: state.sliderValue.toString(),alarmId: alarmId.toString()));
+      print("Success");
+      emitter(state.copyWith(response: Resource.success()));
+
+    } catch (e) {
+      print(e);
+      emitter(state.copyWith(response: Resource.failure(message: e.toString())));
+
+    }
+
+
 
   }
 

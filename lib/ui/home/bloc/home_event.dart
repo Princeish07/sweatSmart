@@ -36,3 +36,19 @@ class ResetStateEvent extends HomeEvent {
   @override
   List<Object?> get props => [];
 }
+class FetchAlarmListEvent extends HomeEvent {
+  @override
+  List<Object?> get props => [];
+}
+
+class ToggleAlarm extends HomeEvent {
+  bool? isActive;
+  DateTime? time;
+  int? alarmId;
+
+
+  ToggleAlarm({this.isActive,this.time,this.alarmId});
+  @override
+  List<Object?> get props => [isActive,time,alarmId];
+}
+

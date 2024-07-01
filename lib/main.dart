@@ -9,6 +9,7 @@ import 'package:health/health.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sweat_smart/data/model/LoginUserModel.dart';
 import 'package:sweat_smart/data/repository/home_repository_impl.dart';
+import 'package:sweat_smart/data/repository/workout_plan_repository_impl.dart';
 import 'package:sweat_smart/other/resource.dart';
 import 'package:sweat_smart/other/schedule_alarm.dart';
 import 'package:sweat_smart/ui/common_loader/bloc/common_loader_bloc.dart';

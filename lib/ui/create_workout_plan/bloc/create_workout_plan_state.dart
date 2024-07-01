@@ -1,6 +1,24 @@
 part of 'create_workout_plan_bloc.dart';
 
-@immutable
-sealed class CreateWorkoutPlanState {}
+ abstract class CreateWorkoutPlanState extends Equatable {
+  @override
+  List<Object?> get props => [];
+}
 
-final class CreateWorkoutPlanInitial extends CreateWorkoutPlanState {}
+class CreateWorkoutInitialPlanState extends CreateWorkoutPlanState {
+  @override
+  List<Object?> get props => [];
+}
+
+class GetBodyPartListState extends CreateWorkoutPlanState{
+  @override
+  List<Object?> get props => [];
+
+}
+
+
+class GetExerciseListState extends CreateWorkoutPlanState{
+  @override
+  List<Object?> get props => [];
+
+}

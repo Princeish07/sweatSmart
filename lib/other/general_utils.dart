@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:toastification/toastification.dart';
+import 'package:intl/intl.dart';
 
 extension EmailValidator on String {
   bool isValidEmail() {
@@ -26,5 +27,20 @@ formattedTime({required int timeInSecond}) {
   String minute = min.toString().length <= 1 ? "0$min" : "$min";
   String second = sec.toString().length <= 1 ? "0$sec" : "$sec";
   return "$minute : $second";
+}
+
+formattedToDateTime(DateTime? dateTime){
+  final DateTime now = DateTime.now();
+  final DateFormat formatter = DateFormat('yMMMd');
+  final String formatted = formatter.format(now);
+  return formatted;
+}
+
+formattedTimeAMPM(DateTime? dateTime,BuildContext context){
+
+
+  var time =TimeOfDay(hour: dateTime!.hour,minute: dateTime!.minute).format(context);
+  return time;
+
 }
 

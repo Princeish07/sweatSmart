@@ -18,7 +18,7 @@ class _HealthDetailState extends State<HealthDetail> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomeBloc, HomeState>(
+    return BlocBuilder<HomeBloc, HomeApiState>(
       buildWhen: (old,new1){
         return old!=new1 && old.userHealthModel?.data !=null;
       },

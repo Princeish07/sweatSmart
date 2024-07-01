@@ -56,6 +56,7 @@ dependencies:
   alarm: ^3.1.4
   transparent_image: ^2.0.1
   cloud_firestore: ^5.0.2
+  dio: ^5.4.3+1
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:health/health.dart';
 import 'package:sweat_smart/data/local/shared_pref/shared_pref_key.dart';
 import 'package:sweat_smart/data/local/shared_pref/shared_preference.dart';
@@ -5,6 +7,7 @@ import 'package:sweat_smart/other/resource.dart';
 import 'package:sweat_smart/ui/home/repository/home_repository.dart';
 
 import '../../other/service_locator/locator.dart';
+import '../model/alarm_model.dart';
 import '../model/foot_step.dart';
 
 class HomeRepositoryImpl extends HomeRepository{
@@ -69,6 +72,37 @@ class HomeRepositoryImpl extends HomeRepository{
 
     }
   }
+
+  @override
+  Future<Resource<List<AlarmModel>>> fetchAlarmList() async {
+    try {
+      // Reference to Firestore
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+      CollectionReference myAlarmCollection = firestore
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .collection('my_alarm');
+
+      QuerySnapshot querySnapshot = await myAlarmCollection.get();
+
+      List<AlarmModel> alarms = querySnapshot.docs
+          .map((doc) => AlarmModel.fromMap(doc.data() as Map<String, dynamic>))
+          .toList();
+
+
+      return Resource.success(data: alarms);
+    } catch (e) {
+      // Handle errors
+      print("Error fetching alarms: $e");
+      return Resource.failure(message: e.toString());
+
+    }
+  }
+
+
+
+
 
 
 

@@ -12,6 +12,7 @@ import 'package:sweat_smart/ui/home/bloc/home_bloc.dart';
 import 'package:sweat_smart/ui/home/bloc/home_state.dart';
 
 import '../../../other/resource.dart';
+import '../../home/bloc/home_event.dart';
 
 class CreateAlarmScreen extends StatefulWidget {
   const CreateAlarmScreen({super.key});
@@ -31,7 +32,9 @@ class _CreateAlarmScreenState extends State<CreateAlarmScreen> {
     return BlocListener<CreateAlarmBloc, CreateAlarmState>(
       listener: (context, state) {
         if(state.response?.status==Status.SUCCESS){
+          context.read<HomeBloc>().add(FetchAlarmListEvent());
           showToast("Alarm Added", context);
+          Navigator.pop(context);
         }
       },
       child: Container(
@@ -69,7 +72,7 @@ class _CreateAlarmScreenState extends State<CreateAlarmScreen> {
                 ],
               ),
               SizedBox(height: 15,),
-              BlocBuilder<HomeBloc, HomeState>(
+              BlocBuilder<HomeBloc, HomeApiState>(
                 builder: (context, state) {
                   return Text(
                       "Welcome, ${state.loginUserModel?.data?.userName} ");
