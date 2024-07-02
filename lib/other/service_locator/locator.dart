@@ -39,11 +39,11 @@ registerRepository() {
 
 registerBloc() {
   serviceLocator.registerLazySingleton<HomeBloc>(() => HomeBloc(serviceLocator()));
-  serviceLocator.registerFactory<LoginBloc>(() => LoginBloc(serviceLocator()));
-  serviceLocator.registerFactory<RegisterBloc>(() => RegisterBloc(serviceLocator()));
-  serviceLocator.registerFactory<CreateAlarmBloc>(() => CreateAlarmBloc(alarmRepository: serviceLocator()));
+  serviceLocator.registerLazySingleton<LoginBloc>(() => LoginBloc(serviceLocator()));
+  serviceLocator.registerLazySingleton<RegisterBloc>(() => RegisterBloc(serviceLocator()));
+  serviceLocator.registerLazySingleton<CreateAlarmBloc>(() => CreateAlarmBloc(alarmRepository: serviceLocator()));
   serviceLocator.registerLazySingleton<CommonLoaderBloc>(() => CommonLoaderBloc());
-  serviceLocator.registerFactory<SplashBloc>(() => SplashBloc());
-  serviceLocator.registerFactory<CreateWorkoutPlanBloc>(() => CreateWorkoutPlanBloc(repository: serviceLocator()));
-  serviceLocator.registerFactory<RunningExerciseBloc>(() => RunningExerciseBloc());
+  serviceLocator.registerLazySingleton<SplashBloc>(() => SplashBloc());
+  serviceLocator.registerLazySingleton<CreateWorkoutPlanBloc>(() => CreateWorkoutPlanBloc(repository: serviceLocator()));
+  serviceLocator.registerLazySingleton<RunningExerciseBloc>(() => RunningExerciseBloc());
 }
