@@ -28,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return BlocListener<SplashBloc, SplashState>(
       listener: (context, state) {
-        if(state.isAuthenticated?.data==true ||state.isAuthenticated?.data==null){
+        if(state.isAuthenticated?.data==true ||state.isAuthenticated?.data!=null){
           Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
               HomeScreen()), (Route<dynamic> route) => false);
         }else{

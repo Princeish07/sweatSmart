@@ -19,17 +19,16 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
   Future<void> _isAuthenticated(CheckIsAuthenticatedEvent event, Emitter<SplashState> emitter) async {
     try {
       String isAuthenticated = await PreferenceUtils.getString(SharedPrefKey.userEmail);
+     await Future.delayed(Duration(seconds: 3));
       // Timer(
       //   Duration(seconds: 2),
       //       () {
               if(isAuthenticated!=null && isAuthenticated.isNotEmpty){
                 emitter(state.copyWith(isAuthenticated: Resource.success(data: true)));
-              }else       {
-                emitter(state.copyWith(isAuthenticated: Resource.success(data: false)));
-
-
+              }else{
+                emitter(state.copyWith(isAuthenticated: Resource.failure()));
               }
-      //
+
       //       },
       // );
     } catch (e) {

@@ -22,6 +22,7 @@ import 'package:sweat_smart/ui/login/bloc/login_state.dart';
 import 'package:sweat_smart/ui/login/login_screen.dart';
 import 'package:sweat_smart/ui/register/bloc/register_bloc.dart';
 import 'package:sweat_smart/ui/running_excercise/bloc/running_exercise_bloc.dart';
+import 'package:sweat_smart/ui/splash/SliverScreen.dart';
 import 'package:sweat_smart/ui/splash/bloc/splash_bloc.dart';
 import 'package:sweat_smart/ui/splash/splash.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -124,7 +125,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: const SplashScreen(),
+        home: const SliverDemo(),
 
       ),
     )
