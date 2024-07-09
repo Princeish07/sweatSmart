@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:sweat_smart/data/local/shared_pref/shared_preference.dart';
 import 'package:sweat_smart/data/repository/FirestoreRepository.dart';
 import 'package:sweat_smart/data/repository/alarm_repository_impl.dart';
+import 'package:sweat_smart/data/repository/exercise_repository_impl.dart';
 import 'package:sweat_smart/data/repository/home_repository_impl.dart';
 import 'package:sweat_smart/data/repository/login_repoistory_impl.dart';
 import 'package:sweat_smart/data/repository/registration_repository_impl.dart';
@@ -18,6 +19,7 @@ import 'package:sweat_smart/ui/login/repository/auth_repository.dart';
 import 'package:sweat_smart/ui/register/bloc/register_bloc.dart';
 import 'package:sweat_smart/ui/register/repository/registration_repository.dart';
 import 'package:sweat_smart/ui/running_excercise/bloc/running_exercise_bloc.dart';
+import 'package:sweat_smart/ui/running_excercise/repository/exercise_repository.dart';
 import 'package:sweat_smart/ui/splash/bloc/splash_bloc.dart';
 
 final serviceLocator = GetIt.instance; // GetIt.I is also valid
@@ -34,6 +36,7 @@ registerRepository() {
   serviceLocator.registerLazySingleton<AlarmRepository>(() => AlarmRepositoryImpl());
   serviceLocator.registerLazySingleton<WorkoutPlanRepository>(() => WorkoutPlanRepositoryImpl());
 
+  serviceLocator.registerLazySingleton<ExerciseRepository>(() => ExerciseRepositoryImpl());
 
 }
 
@@ -45,5 +48,5 @@ registerBloc() {
   serviceLocator.registerLazySingleton<CommonLoaderBloc>(() => CommonLoaderBloc());
   serviceLocator.registerLazySingleton<SplashBloc>(() => SplashBloc());
   serviceLocator.registerLazySingleton<CreateWorkoutPlanBloc>(() => CreateWorkoutPlanBloc(repository: serviceLocator()));
-  serviceLocator.registerLazySingleton<RunningExerciseBloc>(() => RunningExerciseBloc());
+  serviceLocator.registerLazySingleton<RunningExerciseBloc>(() => RunningExerciseBloc(repository: serviceLocator()));
 }

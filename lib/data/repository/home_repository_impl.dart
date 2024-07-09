@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:health/health.dart';
 import 'package:sweat_smart/data/local/shared_pref/shared_pref_key.dart';
 import 'package:sweat_smart/data/local/shared_pref/shared_preference.dart';
+import 'package:sweat_smart/data/model/ExerciseModel.dart';
+import 'package:sweat_smart/data/model/workout_plan_model.dart';
 import 'package:sweat_smart/other/resource.dart';
 import 'package:sweat_smart/ui/home/repository/home_repository.dart';
 
@@ -100,7 +102,32 @@ class HomeRepositoryImpl extends HomeRepository{
     }
   }
 
+  @override
+  Future<Resource<List<WorkoutPlanModel>>> fetchExerciseList() async {
+    try {
+      // Reference to Firestore
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
 
+      CollectionReference myWorkoutPlanRef = firestore
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .collection('my_workout_plan');
+
+      QuerySnapshot querySnapshot = await myWorkoutPlanRef.get();
+
+      List<WorkoutPlanModel> workoutPlans = querySnapshot.docs
+          .map((doc) => WorkoutPlanModel.fromMap(doc.data() as Map<String, dynamic>))
+          .toList();
+
+
+      return Resource.success(data: workoutPlans);
+    } catch (e) {
+      // Handle errors
+      print("Error fetching alarms: $e");
+      return Resource.failure(message: e.toString());
+
+    }
+  }
 
 
 

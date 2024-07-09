@@ -28,6 +28,7 @@ class _AlarmListState extends State<AlarmList> {
   Widget build(BuildContext context) {
 
     return BlocBuilder<HomeBloc, HomeApiState>(
+
   builder: (context, state)
     {
 

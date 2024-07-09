@@ -1,12 +1,15 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pushupcount/views/pose_detection_view.dart';
 import 'package:sweat_smart/other/app_resource/AppDimen.dart';
 import 'package:sweat_smart/other/app_resource/AppStyle.dart';
 import 'package:sweat_smart/ui/common_loader/bloc/common_loader_bloc.dart';
 import 'package:sweat_smart/ui/common_loader/common_loader_helper.dart';
 import 'package:sweat_smart/ui/create_alarm/ui/create_alarm_screen.dart';
+import 'package:sweat_smart/ui/create_workout_plan/bloc/create_workout_plan_bloc.dart';
 import 'package:sweat_smart/ui/create_workout_plan/ui/create_workout_plan_screen.dart';
 import 'package:sweat_smart/ui/home/bloc/home_bloc.dart';
 import 'package:sweat_smart/ui/home/bloc/home_event.dart';
@@ -14,9 +17,11 @@ import 'package:sweat_smart/ui/home/ui/CardWithNumericAndString.dart';
 import 'package:sweat_smart/ui/home/ui/alarm_list.dart';
 import 'package:sweat_smart/ui/home/ui/health_detail.dart';
 import 'package:sweat_smart/ui/home/ui/warm_up_excercise_list.dart';
+import 'package:sweat_smart/ui/home/ui/workout_plan_list.dart';
 import 'package:sweat_smart/ui/login/login_screen.dart';
 import 'package:sweat_smart/ui/running_excercise/ui/running_excercise_screen.dart';
 
+import '../../../main.dart';
 import '../../../other/app_resource/AppColors.dart';
 import '../../../other/resource.dart';
 import '../../common_loader/ui/common_loader_screen.dart';
@@ -39,7 +44,8 @@ class _HomeScreenState extends State<HomeScreen> {
         .addPostFrameCallback((_) async {
        context.read<HomeBloc>().add(GetLoggedInUserDetailEvent());
        context.read<HomeBloc>().add(GetUserHealthDetails());
-       context.read<HomeBloc>().add(FetchAlarmListEvent());
+
+       context.read<HomeBloc>().add(FetchExerciseList());
 
     });
 
@@ -55,6 +61,9 @@ class _HomeScreenState extends State<HomeScreen> {
           return SafeArea(
             child: Stack(children: [
               Scaffold(
+                appBar: AppBar(actions: [IconButton(onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context)=> PoseDetectorView()));
+                }, icon: const Icon(Icons.camera))],),
                 floatingActionButton: Container(
                   decoration: const BoxDecoration(
                     gradient: LinearGradient(
@@ -172,25 +181,35 @@ class _HomeScreenState extends State<HomeScreen> {
                                             topLeft: Radius.circular(24),
                                             topRight: Radius.circular(24)),
                                         color: Colors.white),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                      children: [
-                                        const WarmUpExcerciseList(),
-                                        MyAlarmPlan(
-                                          onAddReminderClick: () {
-                                            print("Helllo called");
+                                    child: SingleChildScrollView(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                        children: [
+                                          const WarmUpExcerciseList(),
+                                          MyAlarmPlan(
+                                            onAddReminderClick: () {
+                                              print("Helllo called");
+                                                                        
+                                              showModalBottomSheet<void>(
+                                                  context: context,
+                                                  isScrollControlled: true,
+                                                  builder: (context) {
+                                                    return CreateAlarmScreen();
+                                                  });
+                                            },
+                                          ),
 
-                                            showModalBottomSheet<void>(
-                                                context: context,
-                                                isScrollControlled: true,
-                                                builder: (context) {
-                                                  return CreateAlarmScreen();
-                                                });
-                                          },
-                                        ),
-                                        AlarmList()
-                                      ],
+                                          AlarmList(),
+                                          SizedBox(height: 15,),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: AppDimen.mainScreenHorizontalPadding),
+                                            child: Text("My Workout Plan",style: AppStyles().largeSubHeadingStyle(Colors.black),textAlign: TextAlign.start,),
+                                          ),
+                                          const Align(child: WorkoutPlanList())
+
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 )

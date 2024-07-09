@@ -56,6 +56,7 @@ class _WarmUpExcerciseListState extends State<WarmUpExcerciseList> {
           itemBuilder: (context, index) {
             return GestureDetector(
                 onTap: () {
+
                   Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -65,6 +66,7 @@ class _WarmUpExcerciseListState extends State<WarmUpExcerciseList> {
                                         int.parse(
                                             list[index].excerciseTime ?? "0")),
                             gif: list[index].exerciseGif,
+
                               )));
                 },
                 child: ExcerciseListItem(

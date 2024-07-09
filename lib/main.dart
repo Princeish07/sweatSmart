@@ -16,6 +16,7 @@ import 'package:sweat_smart/ui/common_loader/bloc/common_loader_bloc.dart';
 import 'package:sweat_smart/ui/create_alarm/bloc/create_alarm_bloc.dart';
 import 'package:sweat_smart/ui/create_workout_plan/bloc/create_workout_plan_bloc.dart';
 import 'package:sweat_smart/ui/home/bloc/home_bloc.dart';
+import 'package:sweat_smart/ui/home/ui/home_screen.dart';
 import 'package:sweat_smart/ui/login/bloc/login_bloc.dart';
 import 'package:sweat_smart/ui/login/bloc/login_state.dart';
 import 'package:sweat_smart/ui/login/login_screen.dart';
@@ -124,13 +125,47 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
         ),
         home: const SplashScreen(),
+
       ),
     )
 
     );
   }
 }
+class CustomCard extends StatelessWidget {
+  final String _label;
+  final Widget _viewPage;
+  final bool featureCompleted;
 
+  const CustomCard(this._label, this._viewPage, {this.featureCompleted = true});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 5,
+      margin: EdgeInsets.only(bottom: 10),
+      child: ListTile(
+        tileColor: Theme
+            .of(context)
+            .primaryColor,
+        title: Text(
+          _label,
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        onTap: () {
+          if (!featureCompleted) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content:
+                const Text('This feature has not been implemented yet')));
+          } else {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => _viewPage));
+          }
+        },
+      ),
+    );
+  }
+}
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
 

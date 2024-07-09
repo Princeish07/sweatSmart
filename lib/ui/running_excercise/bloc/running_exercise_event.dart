@@ -18,3 +18,13 @@ class StopTimerEvent extends RunningExerciseEvent{
   List<Object?> get props => [];
 
 }
+
+class GetDetailsOfExerciseEvent extends RunningExerciseEvent{
+  String? id;
+  GetDetailsOfExerciseEvent({this.id});
+
+
+  @override
+  List<Object?> get props => [id];
+
+}

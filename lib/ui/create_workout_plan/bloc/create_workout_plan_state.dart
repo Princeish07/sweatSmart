@@ -2,8 +2,8 @@ part of 'create_workout_plan_bloc.dart';
 
 class CreateWorkoutPlanState extends Equatable {
   String? selectedBodyItem = 'Select';
+  Resource<bool>? createWorkoutPlanResponse;
   Duration? duration = Duration(hours: 0, minutes: 0);
-
 
   // List of items in our dropdown menu
   Resource<List<String>>? selectedBodyItemList = Resource.loading(data: [
@@ -36,7 +36,9 @@ class CreateWorkoutPlanState extends Equatable {
       ExerciseModel? selectedExerciseItem,
       Resource<List<ExerciseModel>>? selectedExerciseItemList,
       Resource<List<String>>? priorityList,
-      this.selectedPriority = "Select",this.duration=const Duration(hours: 0, minutes: 0)})
+        this.createWorkoutPlanResponse,
+      this.selectedPriority = "Select",
+      this.duration = const Duration(hours: 0, minutes: 0),})
       : selectedBodyItemList = selectedBodyItemList ??
             Resource.success(
                 data: const ['Select', 'Item 2', 'Item 3', 'Item 4', 'Item 5']),
@@ -59,15 +61,20 @@ class CreateWorkoutPlanState extends Equatable {
       {String? selectedBodyItem,
       Resource<List<String>>? selectedBodyItemList,
       ExerciseModel? selectedExerciseItem,
-      Resource<List<ExerciseModel>>? selectedExerciseItemList,String? selectedPriority,Resource<List<String>>? priorityList,Duration? duration}) {
+      Resource<List<ExerciseModel>>? selectedExerciseItemList,
+      String? selectedPriority,
+      Resource<List<String>>? priorityList,
+      Duration? duration,
+        Resource<bool>? createWorkoutPlanResponse}) {
     return CreateWorkoutPlanState(
         selectedBodyItem: selectedBodyItem ?? this.selectedBodyItem,
         selectedBodyItemList: selectedBodyItemList ?? this.selectedBodyItemList,
         selectedExerciseItem: selectedExerciseItem ?? this.selectedExerciseItem,
         selectedExerciseItemList:
             selectedExerciseItemList ?? this.selectedExerciseItemList,
-    selectedPriority: selectedPriority?? this.selectedPriority,
-    priorityList:  priorityList ?? this.priorityList,duration: duration ?? this.duration);
+        selectedPriority: selectedPriority ?? this.selectedPriority,
+        priorityList: priorityList ?? this.priorityList,
+        duration: duration ?? this.duration,createWorkoutPlanResponse: createWorkoutPlanResponse ??  this.createWorkoutPlanResponse);
   }
 
   @override
@@ -76,8 +83,10 @@ class CreateWorkoutPlanState extends Equatable {
         selectedBodyItemList,
         selectedExerciseItem,
         selectedExerciseItemList,
-    selectedPriority,
-    priorityList,duration
+        selectedPriority,
+        priorityList,
+        duration,
+    createWorkoutPlanResponse
       ];
 }
 //

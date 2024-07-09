@@ -52,3 +52,7 @@ class ToggleAlarm extends HomeEvent {
   List<Object?> get props => [isActive,time,alarmId];
 }
 
+class FetchExerciseList extends HomeEvent {
+  @override
+  List<Object?> get props => [];
+}

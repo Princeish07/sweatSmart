@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sweat_smart/data/local/shared_pref/shared_preference.dart';
 import 'package:sweat_smart/data/model/alarm_model.dart';
 import 'package:sweat_smart/data/model/user_health_model.dart';
+import 'package:sweat_smart/data/model/workout_plan_model.dart';
 import 'package:sweat_smart/data/repository/home_repository_impl.dart';
 import 'package:sweat_smart/other/resource.dart';
 import 'package:sweat_smart/ui/common_loader/common_loader_helper.dart';
@@ -24,6 +25,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeApiState> {
   Resource<LoginUserModel>? loginUserModel;
   Resource<List<FootSteps>>? footSteps;
   Resource<List<AlarmModel>>? alarmList;
+  Resource<List<WorkoutPlanModel>>? workoutExerciseList;
 
   HomeBloc(this.homeRepository) : super(HomeApiState()) {
     on<GetLoggedInUserDetailEvent>(_getUserDetailsFromSharedPref);
@@ -31,6 +33,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeApiState> {
     on<LogoutUser>(_logoutUser);
     on<ResetStateEvent>(_resetState);
     on<FetchAlarmListEvent>(_fetchAlarmList);
+    on<FetchExerciseList>(_fetchExerciseList);
+
   }
 
   void _getUserDetailsFromSharedPref(
@@ -120,6 +124,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeApiState> {
     }
   }
 
-
+  Future<void> _fetchExerciseList(
+      FetchExerciseList event, Emitter<HomeApiState> emitter) async {
+    try {
+      workoutExerciseList = await homeRepository?.fetchExerciseList();
+      emitter(state.copyWith(workoutExerciseListResponse: workoutExerciseList));
+    } catch (e) {
+      print(e);
+      emitter(state.copyWith(
+          alarmListResponse: Resource.failure(message: e.toString())));
+    }
+  }
 
 }

@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:sweat_smart/data/model/ExerciseModel.dart';
+import 'package:sweat_smart/data/model/workout_plan_model.dart';
 
 import '../../../other/resource.dart';
 import '../../common_loader/common_loader_helper.dart';
@@ -17,6 +18,27 @@ class CreateWorkoutPlanBloc extends Bloc<CreateWorkoutPlanEvent, CreateWorkoutPl
   WorkoutPlanRepository? repository;
   Resource<List<String>>? bodyPartList;
   Resource<List<ExerciseModel>>? exerciseList;
+  String validationCheck(
+      {ExerciseModel? exerciseModel,
+        String? priority,
+        String? bodyPart,
+        Duration? duration}){
+    if(duration==Duration()){
+      return "Please select duration";
+    }
+    else if(bodyPart==null || bodyPart.isEmpty || bodyPart == "Select"){
+      return "Please select target area";
+    }
+    else if(exerciseModel==null || exerciseModel.exerciseName!.isEmpty || exerciseModel.exerciseName=="Select"){
+      return "Please select exercise";
+    }
+    else if(priority==null || priority.isEmpty || priority=="Select"){
+      return "Please select priority";
+    }else{
+      return "Success";
+    }
+
+  }
 
   CreateWorkoutPlanBloc({this.repository}) : super(CreateWorkoutPlanState()) {
     on<CreateWorkoutPlanEvent>((event,emitter) async {
@@ -68,11 +90,30 @@ class CreateWorkoutPlanBloc extends Bloc<CreateWorkoutPlanEvent, CreateWorkoutPl
       }
 
       if(event is AddWorkoutPlanEvent){
+        CommonLoaderHelper.showLoader(true);
+
         print(state.selectedPriority);
         print(state.selectedExerciseItem?.exerciseName);
         print(state.selectedBodyItem);
         print(state.duration?.inMinutes);
+       var isValid= validationCheck(exerciseModel: state.selectedExerciseItem,priority: state.selectedPriority,bodyPart: state.selectedBodyItem,duration: state.duration);
+        if(isValid=="Success") {
+       Resource<bool>? response = await  repository?.savePlanInDB(planModel: WorkoutPlanModel(
+              exercise: state.selectedExerciseItem,
+              priority: state.selectedPriority,
+              bodyPart: state.selectedBodyItem,
+              duration: state.duration));
+       if(response?.status==Status.SUCCESS) {
+         emitter(state.copyWith(
+             createWorkoutPlanResponse: Resource.success(data: true)));
+       }else{
+         emitter(state.copyWith(createWorkoutPlanResponse: response));
 
+       }
+
+        }else{
+          emitter(state.copyWith(createWorkoutPlanResponse: Resource.failure(message: isValid)));
+        }
         CommonLoaderHelper.showLoader(false);
 
       }
@@ -83,6 +124,7 @@ class CreateWorkoutPlanBloc extends Bloc<CreateWorkoutPlanEvent, CreateWorkoutPl
 
       }
     });
+
 
 
 

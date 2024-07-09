@@ -1,27 +1,47 @@
 import 'package:sweat_smart/data/model/ExerciseModel.dart';
 
-class WorkoutPlanModel{
+class WorkoutPlanModel {
+  String? id;
+  String? uid;
+
   ExerciseModel? exercise;
   String? priority;
   String? bodyPart;
   Duration? duration;
 
-  WorkoutPlanModel({this.exercise,this.priority,this.bodyPart,this.duration});
+  WorkoutPlanModel(
+      {this.exercise, this.priority, this.bodyPart, this.duration,this.id,this.uid});
 
   Map<String, dynamic> toMap() {
     return {
-      'exercise':exercise,
+      'id': id,
+      'uid': uid,
+
+      'exercise': exercise?.toMap(),
       'priority': priority,
       'bodyPart': bodyPart,
-      'duration': duration
-
+      'durationInMinutes': duration!.inMinutes,
+      'durationInSecond':duration!.inSeconds
     };
   }
 
   WorkoutPlanModel.fromMap(Map<String, dynamic> addressMap)
-      :        exercise = addressMap["exercise"],
+      : exercise = ExerciseModel.fromMap(addressMap["exercise"]),
+        id = addressMap["id"],
+        uid = addressMap["uid"],
 
-        priority = addressMap["priority"],
+      priority = addressMap["priority"],
         bodyPart = addressMap["bodyPart"],
-        duration = addressMap["duration"];
+        duration = Duration(minutes: addressMap["durationInMinutes"],seconds: addressMap["durationInSecond"]);
+
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+          other is ExerciseModel &&
+              runtimeType == other.runtimeType &&
+              id == other.id;
+
+  @override
+  int get hashCode => id.hashCode;
 }
